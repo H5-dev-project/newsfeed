@@ -17,9 +17,14 @@ public class Board extends BaseEntity {
     private String title;
     private String content;
     private String images;
-    private int visibilityType;
+    private Byte visibilityType;
 
-    public Board(String title, String content, String images, int visibilityType) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Board(User user, String title, String content, String images, Byte visibilityType) {
+        this.user = user;
         this.title = title;
         this.content = content;
         this.images = images;
