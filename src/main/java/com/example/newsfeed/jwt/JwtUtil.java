@@ -70,4 +70,12 @@ public class JwtUtil {
         }
     }
 
+
+
+    public AuthUsers getCurrentMemberInfo() {
+        AuthUsers authUsers = (AuthUsers) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return authUsers;
+    }
+
+
 }
