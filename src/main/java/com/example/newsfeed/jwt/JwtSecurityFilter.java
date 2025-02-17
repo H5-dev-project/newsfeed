@@ -50,9 +50,8 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
                 Claims claims = jwtUtil.extractClaims(jwt);
 
                 String userId = claims.getSubject();
-                String userName = claims.get("name", String.class);
                 if(SecurityContextHolder.getContext().getAuthentication() == null){
-                    AuthUsers authUsers = new AuthUsers(userId, userName);
+                    AuthUsers authUsers = new AuthUsers(userId);
 
                     JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(authUsers);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

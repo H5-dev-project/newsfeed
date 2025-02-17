@@ -7,9 +7,8 @@ import java.io.Serializable;
 
 @Getter
 @RequiredArgsConstructor
-public class AuthMember implements Serializable {
+public class AuthUsers implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String userId;
-    private final String userName;
 }

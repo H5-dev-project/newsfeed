@@ -43,21 +43,20 @@ public class Users extends BaseEntity {
     private Byte gender;
 
     @Column(nullable = false)
-    private String image;
+    private String image = "basicImage";
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
 
-    public Users(String id, String email, String password, String username, LocalDateTime birth, String phone, Byte gender, String image) {
-        this.id = id;
+    public Users(String email, String password, String username, LocalDate birth, String phone, Byte gender) {
+        this.id = generateUlid();
         this.email = email;
         this.password = password;
         this.username = username;
         this.birth = birth;
         this.phone = phone;
         this.gender = gender;
-        this.image = image;
     }
 
     private String generateUlid() {
