@@ -1,4 +1,4 @@
-package com.example.newsfeed.jwt.dto;
+package com.example.schedulemanagerplus.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,16 +1,13 @@
-package com.example.newsfeed.jwt;
+package com.example.schedulemanagerplus.jwt;
 
-import com.example.newsfeed.common.dto.ResponseDto;
-
+import com.example.schedulemanagerplus.common.dto.ResponseDto;
+import com.example.schedulemanagerplus.common.exception.dto.ErrorReason;
+import com.example.schedulemanagerplus.common.exception.global.CommonErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -22,16 +19,15 @@ import java.io.IOException;
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        log.error("Unauthorized error: {}", authException.getMessage());
 
-        HttpStatus status= HttpStatus.INTERNAL_SERVER_ERROR;
-        String errorCode = "INTERNAL_SERVER_ERROR";
-        String errorMessage= "서버 내부 오류가 발생했습니다.";
+        ErrorReason errorReason = CommonErrorCode.InternalServerError.getErrorReason();
 
-        response.setStatus(status.value());
+        response.setStatus(errorReason.getStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        ResponseDto<?> errorResponse = ResponseDto.fail(status, errorCode, errorMessage);
+        ResponseDto<?> errorResponse = ResponseDto.fail(errorReason);
         String jsonResponse = new ObjectMapper().writeValueAsString(errorResponse);
 
         response.getWriter().write(jsonResponse);

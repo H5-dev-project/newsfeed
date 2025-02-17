@@ -1,15 +1,15 @@
-package com.example.newsfeed.jwt;
+package com.example.schedulemanagerplus.jwt;
 
-import com.example.newsfeed.jwt.entity.AuthUsers;
+import com.example.schedulemanagerplus.jwt.entity.AuthMember;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
-    private final AuthUsers authUsers;
+    private final AuthMember authMember;
 
-    public JwtAuthenticationToken(AuthUsers authUsers) {
+    public JwtAuthenticationToken(AuthMember authMember) {
         super(null);
-        this.authUsers = authUsers;
+        this.authMember = authMember;
         setAuthenticated(true);
     }
 
@@ -20,6 +20,6 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return authUsers;
+        return authMember;
     }
 }
