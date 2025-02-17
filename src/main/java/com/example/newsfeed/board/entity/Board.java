@@ -1,9 +1,11 @@
 package com.example.newsfeed.board.entity;
 
 import com.example.newsfeed.common.BaseEntity;
+import com.example.newsfeed.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 @Getter
 @Entity
@@ -27,17 +29,17 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private Byte visibilityType;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
 
-//    public Board(User user, String title, String content, String images, Byte visibilityType) {
-//        this.user = user;
-//        this.title = title;
-//        this.content = content;
-//        this.images = images;
-//        this.visibilityType = visibilityType;
-//    }
+    public Board(Users user, String title, String content, String images, Byte visibilityType) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.images = images;
+        this.visibilityType = visibilityType;
+    }
 
     public void update(String title, String content, String images, Byte visibilityType) {
         this.title = title;
