@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.stream.Collectors;
+
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -38,9 +40,8 @@ public class GlobalExceptionHandler {
             httpStatus = HttpStatus.BAD_REQUEST;
             errorCode = "BAD_REQUEST";
             errorMessage = ((MethodArgumentNotValidException) ex).getBindingResult().getFieldErrors().stream()
-                    .findFirst()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                    .orElse("입력값이 유효하지 않습니다.");
+                    .collect(Collectors.joining(", "));
         } else {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             errorCode = "INTERNAL_SERVER_ERROR";
