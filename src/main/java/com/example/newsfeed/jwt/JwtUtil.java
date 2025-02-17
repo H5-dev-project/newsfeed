@@ -1,8 +1,7 @@
-package com.example.schedulemanagerplus.jwt;
+package com.example.newsfeed.jwt;
 
-import com.example.schedulemanagerplus.jwt.dto.TokenDto;
-import com.example.schedulemanagerplus.jwt.exception.InvalidTokenFormatException;
-import com.example.schedulemanagerplus.jwt.exception.NotFoundTokenException;
+import com.example.newsfeed.jwt.dto.TokenDto;
+import com.example.newsfeed.jwt.entity.AuthUsers;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -10,6 +9,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -30,17 +30,17 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(decodedKey);
     }
 
-    public TokenDto createToken(String memberId) {
+    public TokenDto createToken(String usersId) {
         Date date = new Date();
         String accessToken = Jwts.builder()
-                .subject(memberId)
+                .subject(usersId)
                 .issuedAt(new Date())
                 .expiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))
                 .signWith(secretKey)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .subject(memberId)
+                .subject(usersId)
                 .issuedAt(new Date())
                 .expiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
                 .signWith(secretKey)
@@ -53,8 +53,7 @@ public class JwtUtil {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        log.error("토큰을 찾을 수 없습니다.: " + tokenValue);
-        throw new NotFoundTokenException();
+        throw new IllegalArgumentException("유효한 Bearer 토큰이 제공되지 않았습니다.");
     }
 
     public Claims extractClaims(String token) {
@@ -67,12 +66,16 @@ public class JwtUtil {
         } catch (ExpiredJwtException e){
             throw e;
         } catch (JwtException e){
-            log.error("JWT 파싱 중 오류 발생", e);
-            throw new InvalidTokenFormatException();
+            throw new RuntimeException("JWT 처리 중 내부 서버 오류가 발생했습니다.");
         }
     }
 
 
+
+    public AuthUsers getCurrentMemberInfo() {
+        AuthUsers authUsers = (AuthUsers) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return authUsers;
+    }
 
 
 }
