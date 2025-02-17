@@ -1,8 +1,8 @@
-package com.example.schedulemanagerplus.jwt.controller;
+package com.example.newsfeed.jwt.controller;
 
-import com.example.schedulemanagerplus.common.dto.ResponseDto;
-import com.example.schedulemanagerplus.jwt.dto.TokenDto;
-import com.example.schedulemanagerplus.jwt.service.AuthService;
+import com.example.newsfeed.common.dto.ResponseDto;
+import com.example.newsfeed.jwt.dto.TokenDto;
+import com.example.newsfeed.jwt.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
