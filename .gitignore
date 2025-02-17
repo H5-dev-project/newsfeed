@@ -35,6 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 
 ### properties ###
 *.properties
+=======
+src/main/resources/application.properties
+>>>>>>> origin/dev
