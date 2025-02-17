@@ -1,7 +1,9 @@
 package com.example.newsfeed.users.controller;
 
 import com.example.newsfeed.common.dto.ResponseDto;
+import com.example.newsfeed.jwt.annotation.UserSession;
 import com.example.newsfeed.jwt.dto.TokenDto;
+import com.example.newsfeed.jwt.entity.AuthUsers;
 import com.example.newsfeed.users.dto.request.DeleteRequestDto;
 import com.example.newsfeed.users.dto.request.LoginRequestDto;
 import com.example.newsfeed.users.dto.request.RegisterRequestDto;
@@ -35,17 +37,19 @@ public class UsersController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDto<?>> logout(){
-        return ResponseEntity.ok(usersService.logout());
+    public ResponseEntity<ResponseDto<?>> logout(@UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.logout(authUsers));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ResponseDto<?>> update(@Valid @RequestBody UpdateRequestDto request){
-        return ResponseEntity.ok(usersService.update(request));
+    public ResponseEntity<ResponseDto<?>> update(@Valid @RequestBody UpdateRequestDto request,
+                                                 @UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.update(request, authUsers));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto<?>> delete(@RequestBody DeleteRequestDto request){
-        return ResponseEntity.ok(usersService.delete(request));
+    public ResponseEntity<ResponseDto<?>> delete(@RequestBody DeleteRequestDto request,
+                                                 @UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.delete(request, authUsers));
     }
 }
