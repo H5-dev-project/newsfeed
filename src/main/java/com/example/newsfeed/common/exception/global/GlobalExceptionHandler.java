@@ -2,11 +2,15 @@ package com.example.newsfeed.common.exception.global;
 
 import com.example.newsfeed.common.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
@@ -20,7 +24,7 @@ public class GlobalExceptionHandler {
         String errorCode;
         String errorMessage;
 
-        if (ex instanceof IllegalArgumentException) {
+        if (ex instanceof IllegalArgumentException || ex instanceof BadCredentialsException || ex instanceof DuplicateKeyException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             errorCode = "BAD_REQUEST";
             errorMessage = ex.getMessage();
@@ -36,9 +40,8 @@ public class GlobalExceptionHandler {
             httpStatus = HttpStatus.BAD_REQUEST;
             errorCode = "BAD_REQUEST";
             errorMessage = ((MethodArgumentNotValidException) ex).getBindingResult().getFieldErrors().stream()
-                    .findFirst()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                    .orElse("입력값이 유효하지 않습니다.");
+                    .collect(Collectors.joining(", "));
         } else {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             errorCode = "INTERNAL_SERVER_ERROR";
