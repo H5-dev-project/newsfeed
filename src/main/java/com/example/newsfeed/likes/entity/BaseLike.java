@@ -1,6 +1,7 @@
 package com.example.newsfeed.likes.entity;
 
 import com.example.newsfeed.common.BaseEntity;
+import com.example.newsfeed.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
