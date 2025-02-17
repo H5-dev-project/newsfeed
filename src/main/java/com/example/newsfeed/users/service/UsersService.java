@@ -85,8 +85,7 @@ public class UsersService {
     }
 
     @Transactional
-    public ResponseDto<String> logout(){
-        AuthUsers authUsers = jwtUtil.getCurrentMemberInfo();
+    public ResponseDto<String> logout(AuthUsers authUsers) {
 
         RefreshToken refreshToken = refreshTokenRepository.findByUsersId(authUsers.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("리프레시 토큰이 존재하지 않습니다."));
@@ -96,8 +95,7 @@ public class UsersService {
     }
 
     @Transactional
-    public ResponseDto<UsersResponseDto> update(UpdateRequestDto dto) {
-        AuthUsers authUsers = jwtUtil.getCurrentMemberInfo();
+    public ResponseDto<UsersResponseDto> update(UpdateRequestDto dto, AuthUsers authUsers) {
         Users users = usersRepository.findById(authUsers.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
@@ -120,8 +118,7 @@ public class UsersService {
     }
 
     @Transactional
-    public ResponseDto<String> delete(DeleteRequestDto request) {
-        AuthUsers authUsers = jwtUtil.getCurrentMemberInfo();
+    public ResponseDto<String> delete(DeleteRequestDto request, AuthUsers authUsers) {
 
         Users users = usersRepository.findById(authUsers.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
