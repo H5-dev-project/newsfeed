@@ -1,6 +1,6 @@
-package com.example.newsfeed.jwt.entity;
+package com.example.schedulemanagerplus.jwt.entity;
 
-import com.example.newsfeed.users.entity.Users;
+import com.example.schedulemanagerplus.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -16,12 +16,12 @@ public class RefreshToken {
 
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
-    private Users users;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    public RefreshToken(String refreshToken, Users users) {
+    public RefreshToken(String refreshToken, Member member) {
         this.refreshToken = refreshToken;
-        this.users = users;
+        this.member = member;
     }
 
     public RefreshToken() {}

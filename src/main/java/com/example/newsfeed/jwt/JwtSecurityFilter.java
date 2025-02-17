@@ -1,7 +1,8 @@
-package com.example.newsfeed.jwt;
+package com.example.schedulemanagerplus.jwt;
 
-import com.example.newsfeed.common.dto.ResponseDto;
-import com.example.newsfeed.jwt.entity.AuthUsers;
+import com.example.schedulemanagerplus.common.dto.ResponseDto;
+import com.example.schedulemanagerplus.common.exception.global.CommonErrorCode;
+import com.example.schedulemanagerplus.jwt.entity.AuthMember;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -14,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -35,8 +35,8 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         String method = request.getMethod();
 
-        if (PATH_MATCHER.match("/api/users/register", requestURI) ||
-                PATH_MATCHER.match("/api/users/login", requestURI) ||
+        if (PATH_MATCHER.match("/api/members/signin", requestURI) ||
+                PATH_MATCHER.match("/api/members/signup", requestURI) ||
                 PATH_MATCHER.match("/api/auth/refresh", requestURI) ||
                 ("GET".equals(method) && PATH_MATCHER.match("/api/schedules", requestURI)) ||
                 ("GET".equals(method) && PATH_MATCHER.match("/api/comments", requestURI))
@@ -55,32 +55,35 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
                 String userId = claims.getSubject();
                 String userName = claims.get("name", String.class);
                 if(SecurityContextHolder.getContext().getAuthentication() == null){
-                    AuthUsers authUsers = new AuthUsers(userId, userName);
+                    AuthMember authMember = new AuthMember(userId, userName);
 
-                    JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(authUsers);
+                    JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(authMember);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             } catch (ExpiredJwtException e) {
-                sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "JWT_EXPIRED", "액세스 토큰이 만료되었습니다.");
+                log.warn("🔴 JWT 토큰이 만료되었습니다: {}", e.getMessage());
+                sendErrorResponse(response, CommonErrorCode.ACCESS_TOKEN_EXPIRED);
                 return;
-            } catch (MalformedJwtException | SecurityException | UnsupportedJwtException | IllegalArgumentException e) {
-                sendErrorResponse(response, HttpStatus.BAD_REQUEST, "INVALID_JWT", "잘못된 JWT 형식입니다.");
+            } catch (MalformedJwtException | SecurityException | UnsupportedJwtException | IllegalArgumentException e){
+                log.error("Invalid JWT ", e);
+                sendErrorResponse(response, CommonErrorCode.InvalidTokenFormat);
                 return;
             } catch (Exception e) {
-                sendErrorResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "서버 내부 오류가 발생했습니다.");
+                log.error("Internal server error", e);
+                sendErrorResponse(response, CommonErrorCode.InternalServerError);
                 return;
             }
         }
         filterChain.doFilter(request, response);
     }
 
-    private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String errorCode, String message) throws IOException {
-        response.setStatus(status.value());
+    private void sendErrorResponse(HttpServletResponse response, CommonErrorCode errorCode) throws IOException {
+        response.setStatus(errorCode.getErrorReason().getStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        ResponseDto<?> errorResponse = ResponseDto.fail(status, errorCode, message);
+        ResponseDto<?> errorResponse = ResponseDto.fail(errorCode.getErrorReason());
         String jsonResponse = new ObjectMapper().writeValueAsString(errorResponse);
 
         response.getWriter().write(jsonResponse);

@@ -1,7 +1,7 @@
-package com.example.newsfeed.jwt.config;
+package com.example.schedulemanagerplus.jwt.config;
 
-import com.example.newsfeed.jwt.JwtAuthEntryPoint;
-import com.example.newsfeed.jwt.JwtSecurityFilter;
+import com.example.schedulemanagerplus.jwt.JwtAuthEntryPoint;
+import com.example.schedulemanagerplus.jwt.JwtSecurityFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,11 +44,13 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/users/login",
-                                "/api/users/register",
+                                "/api/members/signin",
+                                "/api/members/signup",
                                 "/api/auth/refresh"
                                 )
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/schedules/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
