@@ -136,7 +136,7 @@ public class UsersService {
     }
 
     @Transactional
-    public ResponseDto<String> delete(DeleteRequestDto request, AuthUsers authUsers) {
+    public ResponseDto<?> delete(DeleteRequestDto request, AuthUsers authUsers) {
 
         Users users = usersRepository.findById(authUsers.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
