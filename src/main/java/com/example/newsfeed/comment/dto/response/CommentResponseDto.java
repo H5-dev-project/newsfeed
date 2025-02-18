@@ -1,7 +1,10 @@
 package com.example.newsfeed.comment.dto.response;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
 public class CommentResponseDto {
 
     private final Long id;

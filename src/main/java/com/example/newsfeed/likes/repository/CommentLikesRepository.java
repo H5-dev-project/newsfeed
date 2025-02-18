@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CommentLikesRepository extends JpaRepository<CommentLikes, Long> {
+public interface CommentLikesRepository extends JpaRepository<CommentLikes, String> {
     Optional<CommentLikes> findByCommentIdAndUsersId(Long id, String userId);
 }
