@@ -5,9 +5,12 @@ import com.example.newsfeed.board.dto.request.BoardUpdateRequestDto;
 import com.example.newsfeed.board.dto.response.BoardResponseDto;
 import com.example.newsfeed.board.service.BoardService;
 import com.example.newsfeed.common.dto.ResponseDto;
+import com.example.newsfeed.jwt.annotation.UserSession;
+import com.example.newsfeed.jwt.entity.AuthUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,8 +21,11 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/api/boards")
-    public ResponseEntity<ResponseDto<BoardResponseDto>> save(String userId, @RequestBody BoardSaveRequestDto dto) {
-        return ResponseEntity.ok(boardService.save(userId, dto));
+    public ResponseEntity<ResponseDto<BoardResponseDto>> save(
+            @UserSession AuthUsers authUsers, @RequestPart("board") BoardSaveRequestDto dto,
+            @RequestPart(value = "file") MultipartFile file
+            ) {
+        return ResponseEntity.ok(boardService.save(authUsers, dto, file));
     }
 
     @GetMapping("/api/boards")
@@ -28,21 +34,21 @@ public class BoardController {
     }
 
     @GetMapping("/api/boards/{boardId}")
-    public ResponseEntity<ResponseDto<BoardResponseDto>> findOne(@PathVariable Long boardId) {
+    public ResponseEntity<ResponseDto<BoardResponseDto>> findOne(@PathVariable String boardId) {
         return ResponseEntity.ok(boardService.findById(boardId));
     }
 
     @PutMapping("/api/boards/{boardId}")
     public ResponseEntity<ResponseDto<BoardResponseDto>> update(
-            @PathVariable Long boardId,
-            String userId,
+            @PathVariable String boardId,
+            @UserSession AuthUsers authUsers,
             @RequestBody BoardUpdateRequestDto dto
     ) {
-        return ResponseEntity.ok(boardService.update(boardId,userId,dto));
+        return ResponseEntity.ok(boardService.update(boardId,authUsers,dto));
     }
 
     @DeleteMapping("/api/boards/{boardId}")
-    public void delete(@PathVariable Long boardId, String userId) {
-        boardService.deleteById(boardId, userId);
+    public void delete(@PathVariable String boardId, @UserSession AuthUsers authUsers) {
+        boardService.deleteById(boardId, authUsers);
     }
 }
