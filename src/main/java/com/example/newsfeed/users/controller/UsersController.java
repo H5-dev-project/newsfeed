@@ -8,7 +8,6 @@ import com.example.newsfeed.users.dto.request.DeleteRequestDto;
 import com.example.newsfeed.users.dto.request.LoginRequestDto;
 import com.example.newsfeed.users.dto.request.RegisterRequestDto;
 import com.example.newsfeed.users.dto.request.UpdateRequestDto;
-import com.example.newsfeed.users.dto.response.UsersResponseDto;
 import com.example.newsfeed.users.service.UsersService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

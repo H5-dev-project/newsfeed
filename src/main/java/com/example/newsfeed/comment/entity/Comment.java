@@ -4,7 +4,6 @@ import com.example.newsfeed.board.entity.Board;
 import com.example.newsfeed.common.BaseEntity;
 import com.example.newsfeed.users.entity.Users;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
