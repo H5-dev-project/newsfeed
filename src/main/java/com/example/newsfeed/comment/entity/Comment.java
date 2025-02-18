@@ -1,8 +1,9 @@
 package com.example.newsfeed.comment.entity;
 
+import com.example.newsfeed.board.entity.Board;
 import com.example.newsfeed.common.BaseEntity;
+import com.example.newsfeed.users.entity.Users;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,12 +23,12 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Users user;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    public Comment(Board board, User user, String content) {
+    public Comment(Board board, Users user, String content) {
         this.board = board;
         this.user = user;
         this.content = content;

@@ -36,14 +36,14 @@ public class Users extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birth;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String phone;
 
     @Column(nullable = false)
     private Byte gender;
 
     @Column(nullable = false)
-    private String image = "basicImage";
+    private String imagePath = "basicImage";
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
@@ -70,4 +70,12 @@ public class Users extends BaseEntity {
     public void updatePassword(String newPassword) {
         this.password = newPassword;
     }
+    public void updateProfile(String usernaem, LocalDate birth, String phone, Byte gender, String imagePath) {
+        this.username = usernaem;
+        this.birth = birth;
+        this.phone = phone;
+        this.gender = gender;
+        this.imagePath = imagePath;
+    }
+
 }

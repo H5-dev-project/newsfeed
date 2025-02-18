@@ -1,17 +1,18 @@
 package com.example.newsfeed.users.controller;
 
 import com.example.newsfeed.common.dto.ResponseDto;
+import com.example.newsfeed.jwt.annotation.UserSession;
 import com.example.newsfeed.jwt.dto.TokenDto;
-import com.example.newsfeed.users.dto.request.DeleteRequestDto;
-import com.example.newsfeed.users.dto.request.LoginRequestDto;
-import com.example.newsfeed.users.dto.request.RegisterRequestDto;
-import com.example.newsfeed.users.dto.request.UpdateRequestDto;
+import com.example.newsfeed.jwt.entity.AuthUsers;
+import com.example.newsfeed.users.dto.request.*;
 import com.example.newsfeed.users.service.UsersService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,17 +36,35 @@ public class UsersController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDto<?>> logout(){
-        return ResponseEntity.ok(usersService.logout());
+    public ResponseEntity<ResponseDto<?>> logout(@UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.logout(authUsers));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<ResponseDto<?>> update(@Valid @RequestBody UpdateRequestDto request){
-        return ResponseEntity.ok(usersService.update(request));
+    @PutMapping("/updatePassword")
+    public ResponseEntity<ResponseDto<?>> updatePassword(@Valid @RequestBody PasswordUpdateRequestDto request,
+                                                         @UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.updatePassword(request, authUsers));
+    }
+    @PutMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto<?>> updateProfile(
+            @RequestPart("profile") @Valid ProfileUpdateRequestDto request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.updateProfile(request, file, authUsers));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto<?>> delete(@RequestBody DeleteRequestDto request){
-        return ResponseEntity.ok(usersService.delete(request));
+    public ResponseEntity<ResponseDto<?>> delete(@RequestBody DeleteRequestDto request,
+                                                 @UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.delete(request, authUsers));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<ResponseDto<?>> getMyPage(@UserSession AuthUsers authUsers){
+        return ResponseEntity.ok(usersService.getMyPage(authUsers));
+    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<ResponseDto<?>> getUserPage(@PathVariable String userId){
+        return ResponseEntity.ok(usersService.getUsersPage(userId));
     }
 }
