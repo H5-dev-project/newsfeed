@@ -42,7 +42,7 @@ public class UsersController {
 
     @PutMapping("/updatePassword")
     public ResponseEntity<ResponseDto<?>> updatePassword(@Valid @RequestBody PasswordUpdateRequestDto request,
-                                                 @UserSession AuthUsers authUsers){
+                                                         @UserSession AuthUsers authUsers){
         return ResponseEntity.ok(usersService.updatePassword(request, authUsers));
     }
     @PutMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -4,6 +4,7 @@ import com.example.newsfeed.comment.dto.request.CommentSaveRequestDto;
 import com.example.newsfeed.comment.dto.request.CommentUpdateRequestDto;
 import com.example.newsfeed.comment.dto.response.CommentResponseDto;
 import com.example.newsfeed.comment.service.CommentService;
+import com.example.newsfeed.common.dto.ResponseDto;
 import com.example.newsfeed.jwt.annotation.UserSession;
 import com.example.newsfeed.jwt.entity.AuthUsers;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/boards/{boardId}/comments")
-    public ResponseEntity<CommentResponseDto> save(@UserSession AuthUsers authUsers, @PathVariable String boardId, @RequestBody CommentSaveRequestDto dto) {
+    public ResponseEntity<ResponseDto<CommentResponseDto>> save(@UserSession AuthUsers authUsers, @PathVariable String boardId, @RequestBody CommentSaveRequestDto dto) {
         return ResponseEntity.ok(commentService.save(authUsers.getUserId(), boardId, dto));
     }
 
