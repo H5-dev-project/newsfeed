@@ -35,7 +35,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponseDto> findByBoardId(Long boardId) {
+    public List<CommentResponseDto> findByBoardId(String boardId) {
         List<Comment> comments = commentRepository.findByBoardId(boardId);
 
         return comments.stream()
