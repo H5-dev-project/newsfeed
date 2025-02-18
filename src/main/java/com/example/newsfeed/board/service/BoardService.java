@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -61,10 +62,17 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseDto<List<BoardResponseDto>> findAll() {
+    public ResponseDto<List<BoardResponseDto>> findAll(BoardSaveRequestDto dto) {
 
-        List<BoardResponseDto> dtoList = boardRepository.findAll()
-                .stream().map(BoardResponseDto::toDto).toList();
+        List<BoardResponseDto> dtoList = new ArrayList<>();
+
+        //friendship 코드 들어오면 작성하기!
+//        switch (dto.getVisibilityType()) {
+//            case 0 : dtoList = boardRepository.findAll()
+//                        .stream().map(BoardResponseDto::toDto).toList();
+//                break;
+//            case 1 :
+//        }
 
         return ResponseDto.success(dtoList);
     }
@@ -86,7 +94,7 @@ public class BoardService {
         if (!authUsers.getUserId().equals(board.getUser().getId())) {
             throw new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.");
         }
-        board.update(dto.getTitle(),dto.getContent(),dto.getImages(),dto.getVisibilityType());
+        board.update(dto.getTitle(),dto.getContent(),dto.getVisibilityType());
         return ResponseDto.success(BoardResponseDto.toDto(board));
     }
 
