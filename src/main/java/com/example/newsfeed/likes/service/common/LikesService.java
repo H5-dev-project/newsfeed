@@ -12,10 +12,10 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class LikesService<T extends BaseLike>{
-    protected final JpaRepository<T, Long> likesRepository;
+    protected final JpaRepository<T, String> likesRepository;
     protected final UsersRepository usersRepository;
 
-    public ResponseDto<?> addLike(String userId, Long entityId, T likeEntity) {
+    public ResponseDto<?> addLike(String userId, String entityId, T likeEntity) {
         if(userId.equals(likeEntity.getUsers().getId())){
             throw new IllegalArgumentException("본인이 작성한 글에는 좋아요를 누를 수 없습니다.");
         }
@@ -28,7 +28,7 @@ public class LikesService<T extends BaseLike>{
         return ResponseDto.success("좋아요 등록 완료");
     }
 
-    public ResponseDto<?> cancelLike(Long entityId, String userId){
+    public ResponseDto<?> cancelLike(String entityId, String userId){
         T likeEntity = findLike(entityId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("좋아요 등록이 되어있지 않습니다."));
 
@@ -36,11 +36,11 @@ public class LikesService<T extends BaseLike>{
         return ResponseDto.success("좋아요 취소 완료");
     }
 
-    private Optional<T> findLike(Long entityId, String userId){
+    private Optional<T> findLike(String entityId, String userId){
         if(likesRepository instanceof BoardLikesRepository boardLikesRepository){
-            return (Optional<T >) boardLikesRepository.findByBoardIdAndUsersId(entityId, userId);
+            return (Optional<T>) boardLikesRepository.findByBoardIdAndUsersId(entityId, userId);
         }else if (likesRepository instanceof CommentLikesRepository commentLikesRepository) {
-            return (Optional<T >) commentLikesRepository.findByCommentIdAndUsersId(entityId, userId);
+            return (Optional<T>) commentLikesRepository.findByCommentIdAndUsersId(Long.parseLong(entityId), userId);
         }
 
         return Optional.empty();

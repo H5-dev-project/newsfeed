@@ -7,6 +7,7 @@ import com.example.newsfeed.comment.dto.request.CommentUpdateRequestDto;
 import com.example.newsfeed.comment.dto.response.CommentResponseDto;
 import com.example.newsfeed.comment.entity.Comment;
 import com.example.newsfeed.comment.repository.CommentRepository;
+import com.example.newsfeed.common.dto.ResponseDto;
 import com.example.newsfeed.users.entity.Users;
 import com.example.newsfeed.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,18 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentResponseDto save(String userId, String boardId, CommentSaveRequestDto dto) {
+    public ResponseDto<CommentResponseDto> save(String userId, String boardId, CommentSaveRequestDto dto) {
         Users user = usersRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("해당 보드가 존재하지 않습니다."));
         Comment comment = new Comment(board, user, dto.getContent());
         commentRepository.save(comment);
 
-        return new CommentResponseDto(comment.getId(), user.getId(), board.getId(), comment.getContent(), comment.getCreatedAt(), comment.getModifiedAt());
+        return ResponseDto
+                .success(new CommentResponseDto(comment.getId(),
+                        user.getId(), board.getId(),
+                        comment.getContent(),
+                        comment.getCreatedAt(),
+                        comment.getModifiedAt()));
     }
 
     @Transactional(readOnly = true)

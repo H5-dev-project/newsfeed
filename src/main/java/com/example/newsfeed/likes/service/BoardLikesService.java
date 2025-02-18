@@ -24,7 +24,7 @@ public class BoardLikesService extends LikesService<BoardLikes> {
         this.boardLikesRepository = boardLikesRepository;
     }
 
-    public ResponseDto<?> addBoardLike(Long boardId, String userId){
+    public ResponseDto<?> addBoardLike(String boardId, String userId){
         Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
@@ -35,7 +35,7 @@ public class BoardLikesService extends LikesService<BoardLikes> {
     }
 
 
-    public ResponseDto<?> cancelBoardLike(Long boardId, String userId){
+    public ResponseDto<?> cancelBoardLike(String boardId, String userId){
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
