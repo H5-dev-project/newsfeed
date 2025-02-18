@@ -50,7 +50,6 @@ public class UsersController {
             @RequestPart("profile") @Valid ProfileUpdateRequestDto request,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @UserSession AuthUsers authUsers){
-        System.out.println(request.getPassword() +"@@@!!##"+ request.getUsername());
         return ResponseEntity.ok(usersService.updateProfile(request, file, authUsers));
     }
 
