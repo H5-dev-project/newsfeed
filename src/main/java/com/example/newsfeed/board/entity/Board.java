@@ -2,6 +2,7 @@ package com.example.newsfeed.board.entity;
 
 import com.example.newsfeed.common.BaseEntity;
 import com.example.newsfeed.users.entity.Users;
+import de.huxhorn.sulky.ulid.ULID;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class Board extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(updatable = false, nullable = false, length = 26)
+    private String id;
 
     @Column(nullable = false)
     private String title;
@@ -33,12 +34,16 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    public Board(Users user, String title, String content, String images, Byte visibilityType) {
+    public Board(Users user, String title, String content, Byte visibilityType) {
+        this.id = generateUlid();
         this.user = user;
         this.title = title;
         this.content = content;
-        this.images = images;
         this.visibilityType = visibilityType;
+    }
+
+    private String generateUlid() {
+        return new ULID().nextULID();
     }
 
     public void update(String title, String content, String images, Byte visibilityType) {
@@ -46,5 +51,9 @@ public class Board extends BaseEntity {
         this.content = content;
         this.images = images;
         this.visibilityType = visibilityType;
+    }
+
+    public void updateImage(String images) {
+        this.images = images;
     }
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class BoardResponseDto {
 
-    private final Long id;
+    private final String id;
     private final String userId;
     private final String title;
     private final String content;
@@ -22,7 +22,7 @@ public class BoardResponseDto {
     private final LocalDateTime modifiedAt;
 
     public BoardResponseDto(
-            Long id, String userId, String title, String content, String images,
+            String id, String userId, String title, String content, String images,
             Byte visibilityType, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.userId = userId;
