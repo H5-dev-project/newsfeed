@@ -18,11 +18,14 @@ public class FileUtil {
     @Value("${file.upload-dir}")
     private String uploadDir;
     private final String PROFILE_IMAGE_FOLDER = "profiles";
+    private final String PROFILE_URL = "/uploads/profiles/";
+
     private final String BOARDS_IMAGE_FOLDER = "boards";
+    private final String BOARDS_URL = "/uploads/boards/";
 
 
     public String saveProfileImage(MultipartFile file, String usersId) throws IOException {
-        String projectDir = System.getProperty("user.dir"); //프로젝트 현재 경로
+        String projectDir = System.getProperty("user.dir");
         Path uploadPath = Paths.get(projectDir, uploadDir, PROFILE_IMAGE_FOLDER);
 
         // 업로드 디렉토리가 없으면 생성
@@ -46,12 +49,12 @@ public class FileUtil {
         file.transferTo(filePath.toFile());
 
         // 저장된 파일의 경로 반환
-        return filePath.toString();
+        return PROFILE_URL + fileName;
     }
 
 
     public String saveBoardImage(MultipartFile file, String usersId, String boardId) throws IOException {
-        String projectDir = System.getProperty("user.dir"); //프로젝트 현재 경로
+        String projectDir = System.getProperty("user.dir");
         Path uploadPath = Paths.get(projectDir, uploadDir, BOARDS_IMAGE_FOLDER);
 
         // 업로드 디렉토리가 없으면 생성
@@ -66,7 +69,7 @@ public class FileUtil {
         file.transferTo(filePath.toFile());
 
         // 저장된 파일의 경로 반환
-        return filePath.toString();
+        return BOARDS_URL + fileName;
     }
 
     public void deleteBoardImage(String userId, String boardId) {
@@ -90,7 +93,7 @@ public class FileUtil {
     public void deleteAllUserImages(String usersId) {
         String projectDir = System.getProperty("user.dir");
 
-        // ✅ 프로필 이미지 삭제
+        // 프로필 이미지 삭제
         Path profilePath = Paths.get(projectDir, uploadDir, PROFILE_IMAGE_FOLDER);
         File[] profileImage = profilePath.toFile().listFiles((dir, name) -> name.startsWith(usersId + "_"));
 
@@ -101,7 +104,7 @@ public class FileUtil {
             }
         }
 
-        // ✅ 해당 유저의 모든 게시글 이미지 삭제
+        // 해당 유저의 모든 게시글 이미지 삭제
         Path boardPath = Paths.get(projectDir, uploadDir, BOARDS_IMAGE_FOLDER);
         File[] boardImage = boardPath.toFile().listFiles((dir, name) -> name.startsWith(usersId + "_"));
         if (boardImage != null && boardImage.length > 0) {
@@ -114,9 +117,9 @@ public class FileUtil {
         }
     }
 
-    /**
-     * ✅ 파일 확장자 유지
-     */
+
+    // 파일 확장자 유지
+
     private String getFileExtension(String fileName) {
         if (fileName == null || !fileName.contains(".")) {
             return ""; // 확장자가 없는 경우
