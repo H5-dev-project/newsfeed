@@ -1,5 +1,6 @@
 package com.example.newsfeed.board.dto.response;
 
+import com.example.newsfeed.board.entity.Board;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
@@ -31,5 +32,18 @@ public class BoardResponseDto {
         this.visibilityType = visibilityType;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+    }
+
+    public static BoardResponseDto toDto(Board board) {
+        return new BoardResponseDto(
+                board.getId(),
+                board.getUser().getId(),
+                board.getTitle(),
+                board.getContent(),
+                board.getImages(),
+                board.getVisibilityType(),
+                board.getCreatedAt(),
+                board.getModifiedAt()
+                );
     }
 }

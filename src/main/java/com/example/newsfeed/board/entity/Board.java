@@ -20,7 +20,7 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "longtext", nullable = false)
     private String content;
 
     @Column(nullable = false)

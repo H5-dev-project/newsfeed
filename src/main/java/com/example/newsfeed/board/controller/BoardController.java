@@ -17,26 +17,32 @@ public class BoardController {
 
     private final BoardService boardService;
 
-//    @PostMapping("/api/boards")
-//    public ResponseEntity<ResponseDto> save(Long userId, @RequestBody BoardSaveRequestDto dto) {
-//        return ResponseEntity.ok(boardService.save(userId, dto));
-//    }
-//
-//    @GetMapping("/api/boards")
-//    public ResponseEntity<List<ResponseDto>> findAll() {
-//        return ResponseEntity.ok(boardService.findAll());
-//    }
-//
-//    @GetMapping("/api/boards/{boardId}")
-//    public ResponseEntity<ResponseDto> findOne(@PathVariable Long boardId) {
-//        return ResponseEntity.ok(boardService.findById(boardId));
-//    }
+    @PostMapping("/api/boards")
+    public ResponseEntity<ResponseDto<BoardResponseDto>> save(String userId, @RequestBody BoardSaveRequestDto dto) {
+        return ResponseEntity.ok(boardService.save(userId, dto));
+    }
 
-//    @PutMapping("/api/boards/{boardId}")
-//    public ResponseEntity<BoardResponseDto> update(
-//            String userId, @PathVariable Long boardId,
-//            @RequestBody BoardUpdateRequestDto dto
-//    ) {
-//        return ResponseEntity.ok(boardService.update(userId,boardId,dto));
-//    }
+    @GetMapping("/api/boards")
+    public ResponseEntity<ResponseDto<List<BoardResponseDto>>>findAll() {
+        return ResponseEntity.ok(boardService.findAll());
+    }
+
+    @GetMapping("/api/boards/{boardId}")
+    public ResponseEntity<ResponseDto<BoardResponseDto>> findOne(@PathVariable Long boardId) {
+        return ResponseEntity.ok(boardService.findById(boardId));
+    }
+
+    @PutMapping("/api/boards/{boardId}")
+    public ResponseEntity<ResponseDto<BoardResponseDto>> update(
+            @PathVariable Long boardId,
+            String userId,
+            @RequestBody BoardUpdateRequestDto dto
+    ) {
+        return ResponseEntity.ok(boardService.update(boardId,userId,dto));
+    }
+
+    @DeleteMapping("/api/boards/{boardId}")
+    public void delete(@PathVariable Long boardId, String userId) {
+        boardService.deleteById(boardId, userId);
+    }
 }
