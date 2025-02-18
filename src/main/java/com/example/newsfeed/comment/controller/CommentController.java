@@ -24,7 +24,7 @@ public class CommentController {
     }
 
     @GetMapping("/boards/{boardId}/comments")
-    public ResponseEntity<List<CommentResponseDto>> findByBoard(@PathVariable Long boardId) {
+    public ResponseEntity<List<CommentResponseDto>> findByBoard(@PathVariable String boardId) {
         return ResponseEntity.ok(commentService.findByBoardId(boardId));
     }
 

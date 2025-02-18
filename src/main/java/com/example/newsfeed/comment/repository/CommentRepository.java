@@ -15,5 +15,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "GROUP BY c.board.id")
     List<CommentCountDto> countByBoardIds(List<Long> boardIds);
 
-    List<Comment> findByBoardId(Long boardId);
+    List<Comment> findByBoardId(String boardId);
 }
