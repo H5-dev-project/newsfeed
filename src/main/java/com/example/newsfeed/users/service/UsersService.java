@@ -27,7 +27,7 @@ import java.io.IOException;
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
-/*    private final BoardRepository boardRepository;*/
+    /*    private final BoardRepository boardRepository;*/
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
