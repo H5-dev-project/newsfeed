@@ -71,7 +71,7 @@ public class BoardService {
 //            case 0 : dtoList = boardRepository.findAll()
 //                        .stream().map(BoardResponseDto::toDto).toList();
 //                break;
-//            case 1 :
+//            case 1 : dtoList = boardRepository.findById()
 //        }
 
         return ResponseDto.success(dtoList);
