@@ -12,6 +12,7 @@ import java.util.List;
 //친구 요청 테이블
 //승락
 //친구 a b
+//변수명
 @Getter
 @Entity
 @NoArgsConstructor
@@ -21,11 +22,11 @@ public class Friend extends BaseEntity {// 친구 요청을 하고 수락을 누
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users users;  // 친구 요청을 보낸 유저//private String toNickname;
+    @JoinColumn(name = "userId", nullable = false)
+    private Users users;  // 친구 요청을 보낸 유저
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_id", nullable = false)
+    @JoinColumn(name = "friendId", nullable = false)
     private Users friend;  // 친구 요청을 받은 유저
 
     private byte status;//0, 1, 2 = 요청, 승낙, 거절
