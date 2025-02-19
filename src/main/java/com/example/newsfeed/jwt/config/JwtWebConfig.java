@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class JwtWebConfig implements WebMvcConfigurer {
 
     private final UserSessionArgumentResolver userSessionArgumentResolver;
 
-    public WebConfig(UserSessionArgumentResolver userSessionArgumentResolver) {
+    public JwtWebConfig(UserSessionArgumentResolver userSessionArgumentResolver) {
         this.userSessionArgumentResolver = userSessionArgumentResolver;
     }
 
