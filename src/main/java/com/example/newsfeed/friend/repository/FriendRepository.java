@@ -14,6 +14,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     default Friend findByIdOrElseThrow(Long id){
         return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id));
     }
+
     // 기존 친구 요청 여부 확인 (중복 방지)
     public boolean existsByUsersAndFriend(Users users, Users friend);
 

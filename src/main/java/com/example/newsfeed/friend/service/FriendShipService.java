@@ -28,13 +28,12 @@ public class FriendShipService {
         Users fromUser = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
+        // 친구 요청을 받는 사용자 찾기
         Users toUser = usersRepository.findById(dto.getFriend())
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-        // 친구 요청을 받는 사용자 찾기
 //        Users toUser = dto.getFriend();  //FriendRequestDto에서 친구 객체를 받아서 바로 사용 id
         //friendid로 받아와서 유저를 확인하고 받아와야함.
-
 
 //        if (friendRepository.existsByUsersAndFriend(fromUser, toUser)) {
 //            throw new IllegalStateException("이미 친구 요청을 보냈습니다.");
@@ -54,16 +53,13 @@ public class FriendShipService {
     }
 
     @Transactional // 친구 요청 수락
-    public String acceptFriend(Long friendId, String userId) {
-        // 요청 받은 사람
-        Users toUser = usersRepository.findById(userId)
+    public ResponseDto<FriendResponseDto> acceptFriend(FriendRequestDto dto, String userId) {
+        // 요청 보낸 사람
+        Users fromUser =  usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-        Friend friendRequest = friendRepository.findById(friendId)
-                .orElseThrow(() -> new IllegalArgumentException("friend_id가 없습니다. _" + friendId));
-
-        // 요청 보낸 사람
-        Users fromUser =  usersRepository.findById(friendRequest.getUsers().getId())
+        // 요청 받은 사람
+        Users toUser = usersRepository.findById(dto.getFriend())
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
         FriendShip acceptFriend = new FriendShip(toUser, fromUser, (short) 1);
@@ -76,20 +72,18 @@ public class FriendShipService {
 //        FriendShip toUserFriendship = new FriendShip(toUser, fromUser, (short) 1);
         //FriendShip fromUserFriendship = new FriendShip(fromUser, toUser, (short) 1);
 
-        return "친구 추가 완료";
+        return ResponseDto.success(new FriendResponseDto(acceptFriend.getId(), fromUser.getId(), toUser.getId(), acceptFriend.getCreatedAt()));
+        //return "친구 추가 완료";
     }
 
     @Transactional //친구 요청 거절
-    public String rejectFriend(Long friendId, String userId){//컨트롤러
-        // 요청 받은사람
-        Users toUser = usersRepository.findById(userId)
+    public ResponseDto<FriendResponseDto> rejectFriend(FriendRequestDto dto, String userId){//컨트롤러
+        // 요청 보낸 사람
+        Users fromUser =  usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-        Friend friendRequest = friendRepository.findById(friendId)
-                .orElseThrow(() -> new IllegalArgumentException("friend_id가 없습니다. _" + friendId));
-
-        // 요청 보낸 사람
-        Users fromUser =  usersRepository.findById(friendRequest.getUsers().getId())
+        // 요청 받은 사람
+        Users toUser = usersRepository.findById(dto.getFriend())
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
         FriendShip acceptFriend = new FriendShip(toUser, fromUser, (short) 2);
@@ -99,13 +93,13 @@ public class FriendShipService {
 //                .orElseThrow(() -> new IllegalArgumentException("Friend not found with id: " + dto.getFriend().getId()));
 
         // 친구 요청을 거절하는 새로운 FriendShip 객체 생성 (status: 2 = 거절 상태)
-        return "친구 거절 완료";//friendShip.getStatus()
+        return ResponseDto.success(new FriendResponseDto(acceptFriend.getId(), fromUser.getId(), toUser.getId(), acceptFriend.getCreatedAt()));//friendShip.getStatus()
+        //return "친구 거절 완료";
     }
 
     public List<FriendResponseDto> findAll(String userId){//다건 조회 //조회조건 id로
         return friendShipRepository.findAllByUserIdAndStatus(userId, (short)1)
                 .stream().map(FriendResponseDto::toDto).toList();
-
     }
 
     public FriendResponseDto findOne(Long id){//단건 조회
