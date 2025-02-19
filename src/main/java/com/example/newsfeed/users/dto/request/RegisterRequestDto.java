@@ -1,5 +1,6 @@
 package com.example.newsfeed.users.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class RegisterRequestDto {
     @NotBlank
     private String phone;
 
+    @JsonProperty
     @Schema(description = "성별", example = "1")
     @NotNull
     private Byte gender;
