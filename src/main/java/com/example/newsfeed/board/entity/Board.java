@@ -46,10 +46,9 @@ public class Board extends BaseEntity {
         return new ULID().nextULID();
     }
 
-    public void update(String title, String content, String images, Byte visibilityType) {
+    public void update(String title, String content, Byte visibilityType) {
         this.title = title;
         this.content = content;
-        this.images = images;
         this.visibilityType = visibilityType;
     }
 

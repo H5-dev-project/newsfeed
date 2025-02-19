@@ -44,8 +44,8 @@ public class BoardController {
     }
 
     @GetMapping("/api/boards")
-    public ResponseEntity<ResponseDto<List<BoardResponseDto>>>findAll() {
-        return ResponseEntity.ok(boardService.findAll());
+    public ResponseEntity<ResponseDto<List<BoardResponseDto>>>findAll(BoardSaveRequestDto dto) {
+        return ResponseEntity.ok(boardService.findAll(dto));
     }
 
     @GetMapping("/api/boards/{boardId}")
