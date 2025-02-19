@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "commentLikes")
+@Table(name = "comment_likes")
 @Getter
 @NoArgsConstructor
 public class CommentLikes extends  BaseLike {
