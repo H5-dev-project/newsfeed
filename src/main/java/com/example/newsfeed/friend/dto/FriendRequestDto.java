@@ -6,11 +6,10 @@ import lombok.Getter;
 @Getter
 public class FriendRequestDto {
     //private String userId;
-    private Users friend;
+    private String friend;
 
-    public FriendRequestDto(Users friend) {
+    public FriendRequestDto(String friend) {
         //this.userId = userId;
         this.friend = friend;
     }
-
 }
