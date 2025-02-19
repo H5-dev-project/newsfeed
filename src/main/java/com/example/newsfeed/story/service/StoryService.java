@@ -23,35 +23,37 @@ public class StoryService {
     private final StoryRepository storyRepository;
     private final UsersRepository usersRepository;
 
-    public ResponseDto<StoryResponseDto> createStory(String userId, String content, int visibilityType, LocalDate visibilityStart, LocalDate visibilityEnd){
+    @Transactional
+    public ResponseDto<StoryResponseDto> createStory(String userId, String content){
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        Story story = new Story(user, content, visibilityType, visibilityStart, visibilityEnd);
+        Story story = new Story(user, content);
         storyRepository.save(story);
 
         return ResponseDto.success(StoryResponseDto.toDto(story));
     }
 
     @Transactional
-    public ResponseDto<StoryResponseDto> updateStory(Long id, String userId, String content, int visibilityType, LocalDate visibilityStart, LocalDate visibilityEnd){
+    public ResponseDto<StoryResponseDto> updateStory(Long id, String userId, String content, int visibilityType){
         Story story = storyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 스토리가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 스토리가 존재하지 않습니다."));
 
         if(!(story.getUsers().getId()).equals(userId)){
-            throw new RuntimeException("스토리 작성자만 수정이 가능합니다.");
+            throw new IllegalArgumentException("스토리 작성자만 수정이 가능합니다.");
         }
 
-        story.update(content, visibilityType, visibilityStart, visibilityEnd);
+        story.update(content, visibilityType);
         return ResponseDto.success(StoryResponseDto.toDto(story));
     }
 
+    @Transactional
     public ResponseDto<String> deleteStory(Long id, String userId){
         Story story = storyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 스토리가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 스토리가 존재하지 않습니다."));
 
         if(!(story.getUsers().getId()).equals(userId)){
-            throw new RuntimeException("스토리 작성자만 삭제가 가능합니다.");
+            throw new IllegalArgumentException("스토리 작성자만 삭제가 가능합니다.");
         }
 
         storyRepository.delete(story);
@@ -60,10 +62,10 @@ public class StoryService {
 
     public ResponseDto<StoryResponseDto> findById(Long id){
         Story story = storyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 스토리가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 스토리가 존재하지 않습니다."));
 
         if(story.getVisibilityType() == 0){
-            throw new RuntimeException("비공개 상태의 스토리입니다.");
+            throw new IllegalArgumentException("비공개 상태의 스토리입니다.");
         }
 
         return ResponseDto.success(StoryResponseDto.toDto(story));
