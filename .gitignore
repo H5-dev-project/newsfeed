@@ -35,8 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
-src/main/resources/application.properties
 
-
-### .properties (깃에 안 올라가는 거래요)###
+### properties ###
 *.properties
+
