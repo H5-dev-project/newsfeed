@@ -10,8 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @Entity
 @NoArgsConstructor
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@Table(name = "friendship")
 public class FriendShip extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +28,10 @@ public class FriendShip extends BaseEntity {
     public FriendShip(Users user, Users friend, short status) {
         this.user = user;
         this.friend = friend;
+        this.status = status;
+    }
+
+    public FriendShip(short status) {
         this.status = status;
     }
 
