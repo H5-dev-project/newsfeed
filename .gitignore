@@ -36,7 +36,23 @@ out/
 ### VS Code ###
 .vscode/
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 ### properties ###
 *.properties
+=======
 src/main/resources/application.properties
+<<<<<<< HEAD
+
+
+### .properties (깃에 안 올라가는 거래요)###
+*.properties
+=======
+>>>>>>> origin/dev
+>>>>>>> e7375c03f490d1c21906848041b3de5215126b6b
+=======
+
+### properties ###
+*.properties
+
+>>>>>>> 34434f07f040114dd1573b1acafc1eb3c2b9eb47
