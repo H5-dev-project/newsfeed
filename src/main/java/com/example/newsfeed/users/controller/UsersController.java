@@ -36,7 +36,7 @@ public class UsersController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDto<?>> logout(@UserSession AuthUsers authUsers){
+    public ResponseEntity<ResponseDto<?>> logout(@UserSession AuthUsers authUsers){//
         return ResponseEntity.ok(usersService.logout(authUsers));
     }
 

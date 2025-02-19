@@ -19,8 +19,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Table(name = "users")
 public class Users extends BaseEntity {
+    //id가 없음
     @Id
-    @Column(updatable = false, nullable = false, length = 26)
+    @Column(updatable = false, nullable = true, length = 26, unique = true) //nullable = true, unique = true [추가 및 변경]
     private String id;
 
     @Column(nullable = false, unique = true)
@@ -30,7 +31,7 @@ public class Users extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column( nullable = false)//닉네임
     private String username;
 
     @Column(nullable = false)
