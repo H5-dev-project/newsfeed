@@ -23,6 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
+
     private final BoardRepository boardRepository;
     private final UsersRepository usersRepository;
     private final FileUtil fileUtil;
