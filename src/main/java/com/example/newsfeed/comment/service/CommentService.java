@@ -41,48 +41,29 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponseDto> findByBoardId(String boardId) {
-        List<Comment> comments = commentRepository.findByBoardId(boardId);
+    public ResponseDto<List<CommentResponseDto>> findByBoardId(String boardId) {
+        List<CommentResponseDto> comments = commentRepository.findByBoardId(boardId).stream().map(CommentResponseDto::toDto).toList();
 
-        return comments.stream()
-                .map(comment -> new CommentResponseDto(
-                        comment.getId(),
-                        comment.getBoard().getId(),
-                        comment.getUser().getId(),
-                        comment.getContent(),
-                        comment.getCreatedAt(),
-                        comment.getModifiedAt()))
-                .collect(Collectors.toList());
+        return ResponseDto.success(comments);
     }
 
     @Transactional(readOnly = true)
-    public CommentResponseDto findOne(Long id) {
+    public ResponseDto<CommentResponseDto> findOne(Long id) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+        CommentResponseDto dto = CommentResponseDto.toDto(comment);
 
-        return new CommentResponseDto(
-                comment.getId(),
-                comment.getBoard().getId(),
-                comment.getUser().getId(),
-                comment.getContent(),
-                comment.getCreatedAt(),
-                comment.getModifiedAt());
+        return ResponseDto.success(dto);
     }
 
     @Transactional
-    public CommentResponseDto update(Long id, String userId, CommentUpdateRequestDto dto) {
+    public ResponseDto<CommentResponseDto> update(Long id, String userId, CommentUpdateRequestDto dto) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
         if (!comment.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.");
         }
         comment.update(dto.getContent());
 
-        return new CommentResponseDto(
-                comment.getId(),
-                comment.getBoard().getId(),
-                comment.getUser().getId(),
-                comment.getContent(),
-                comment.getCreatedAt(),
-                comment.getModifiedAt());
+        return ResponseDto.success(CommentResponseDto.toDto(comment));
     }
 
     @Transactional

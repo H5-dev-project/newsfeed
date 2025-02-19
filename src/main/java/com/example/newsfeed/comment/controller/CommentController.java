@@ -25,17 +25,17 @@ public class CommentController {
     }
 
     @GetMapping("/boards/{boardId}/comments")
-    public ResponseEntity<List<CommentResponseDto>> findByBoard(@PathVariable String boardId) {
+    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> findByBoard(@PathVariable String boardId) {
         return ResponseEntity.ok(commentService.findByBoardId(boardId));
     }
 
     @GetMapping("/comments/{id}")
-    public ResponseEntity<CommentResponseDto> findOne(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<CommentResponseDto>> findOne(@PathVariable Long id) {
         return ResponseEntity.ok(commentService.findOne(id));
     }
 
     @PutMapping("/comments/{id}")
-    public ResponseEntity<CommentResponseDto> update(@UserSession AuthUsers authUsers, @PathVariable Long id, @RequestBody CommentUpdateRequestDto dto) {
+    public ResponseEntity<ResponseDto<CommentResponseDto>> update(@UserSession AuthUsers authUsers, @PathVariable Long id, @RequestBody CommentUpdateRequestDto dto) {
         return ResponseEntity.ok(commentService.update(id, authUsers.getUserId(), dto));
     }
 
