@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class FriendRequestDto {
-    private String user_id;
+    //private String userId;
     private Users friend;
 
-    public FriendRequestDto(String user_id, Users friend) {
-        this.user_id = user_id;
+    public FriendRequestDto(Users friend) {
+        //this.userId = userId;
         this.friend = friend;
     }
 
