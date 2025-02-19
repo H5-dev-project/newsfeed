@@ -5,8 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
+
 public interface FriendShipRepository extends JpaRepository<FriendShip, Long> {
     default FriendShip findByIdOrElseThrow(Long id){
         return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id));
     }
+    List<FriendShip> findAllByUserIdAndStatus(String userId, Short status);
 }
