@@ -21,4 +21,8 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     Optional<Friend> findByFriendIdAndUsersId(String friendId, String userId);
 
 //    select * from friend where friend_id = "친구신" And user_id = "나";
+    int countByUsers_Id(String userId);
+
+    boolean existsByUsers_IdAndFriend_Id(String usersId, String friendId);
+    boolean existsByFriend_IdAndUsers_Id(String usersId, String friendId);
 }
