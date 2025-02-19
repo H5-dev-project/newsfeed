@@ -2,9 +2,14 @@ package com.example.newsfeed.story.entity;
 
 import com.example.newsfeed.common.BaseEntity;
 import com.example.newsfeed.users.entity.Users;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -22,34 +27,38 @@ public class Story extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private int visibilityType;
+    private int visibilityType = 1;
 
-    @Column(nullable = false)
+    @CreatedDate
     private LocalDate visibilityStart;
 
-    @Column(nullable = false)
     private LocalDate visibilityEnd;
 
     public Story(){
 
     }
 
-    public Story(Users users, String content, int visibilityType, LocalDate visibilityStart, LocalDate visibilityEnd) {
+    public Story (Users users, String content) {
         this.users = users;
         this.content = content;
-        this.visibilityType = visibilityType;
-        this.visibilityStart = visibilityStart;
-        this.visibilityEnd = visibilityEnd;
     }
 
-    public void update(String content, int visibilityType, LocalDate visibilityStart, LocalDate visibilityEnd){
+    public void update(String content, int visibilityType){
         this.content = content;
         this.visibilityType = visibilityType;
-        this.visibilityStart = visibilityStart;
-        this.visibilityEnd = visibilityEnd;
     }
 
     public void changeVisibilityType(int visibilityType){
         this.visibilityType = visibilityType;
     }
+
+    @PrePersist
+    public void prePersist(){
+        if(visibilityStart == null){
+            visibilityStart = LocalDate.now();
+        }
+
+        visibilityEnd = visibilityStart.plusDays(1);
+    }
+
 }
