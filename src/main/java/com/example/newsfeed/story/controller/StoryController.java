@@ -1,11 +1,12 @@
 package com.example.newsfeed.story.controller;
 
 import com.example.newsfeed.common.dto.ResponseDto;
-import com.example.newsfeed.jwt.JwtUtil;
 import com.example.newsfeed.jwt.annotation.UserSession;
 import com.example.newsfeed.jwt.entity.AuthUsers;
-import com.example.newsfeed.story.dto.StoryRequestDto;
+import com.example.newsfeed.story.dto.StorySaveRequestDto;
+import com.example.newsfeed.story.dto.StoryUpdateRequestDto;
 import com.example.newsfeed.story.service.StoryService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,27 +19,23 @@ public class StoryController {
     private final StoryService storyService;
 
     @PostMapping("/createStory")
-    public ResponseEntity<ResponseDto<?>> createStory(@UserSession AuthUsers authUser, @Valid @RequestBody StoryRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<?>> createStory(@Parameter(hidden = true) @UserSession AuthUsers authUser,
+                                                      @Valid @RequestBody StorySaveRequestDto requestDto) {
+
         String userId = authUser.getUserId();
-        return  ResponseEntity.ok( storyService.createStory(userId,
-                requestDto.getContent(),
-                requestDto.getVisibilityType(),
-                requestDto.getVisibilityStart(),
-                requestDto.getVisibilityEnd()));
+        return  ResponseEntity.ok(storyService.createStory(userId, requestDto.getContent()));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ResponseDto<?>> updateStory(@UserSession AuthUsers authUser, @PathVariable Long id, @Valid @RequestBody StoryRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<?>> updateStory(@Parameter(hidden = true)  @UserSession AuthUsers authUser, @PathVariable Long id, @Valid @RequestBody StoryUpdateRequestDto requestDto) {
         return ResponseEntity.ok(storyService.updateStory(id,
                 authUser.getUserId(),
                 requestDto.getContent(),
-                requestDto.getVisibilityType(),
-                requestDto.getVisibilityStart(),
-                requestDto.getVisibilityEnd()));
+                requestDto.getVisibilityType()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<?>> deleteStory(@UserSession AuthUsers authUser, @PathVariable Long id) {
+    public ResponseEntity<ResponseDto<?>> deleteStory(@Parameter(hidden = true)  @UserSession AuthUsers authUser, @PathVariable Long id) {
         return ResponseEntity.ok(storyService.deleteStory(id, authUser.getUserId()));
     }
 
