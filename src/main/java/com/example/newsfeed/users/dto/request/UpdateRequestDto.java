@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 @Getter
-public class PasswordUpdateRequestDto {
+public class UpdateRequestDto {
     @NotBlank(message = "공백일 수 없습니다.")
     private String currentPassword;
     @NotBlank(message = "공백일 수 없습니다.")

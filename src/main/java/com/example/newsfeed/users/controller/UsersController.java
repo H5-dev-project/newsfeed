@@ -39,13 +39,13 @@ public class UsersController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDto<?>> logout(@Parameter(hidden = true) @UserSession AuthUsers authUsers){//
+    public ResponseEntity<ResponseDto<?>> logout(@UserSession AuthUsers authUsers){//
         return ResponseEntity.ok(usersService.logout(authUsers));
     }
 
     @PutMapping("/updatePassword")
     public ResponseEntity<ResponseDto<?>> updatePassword(@Valid @RequestBody PasswordUpdateRequestDto request,
-                                                         @Parameter(hidden = true) @UserSession AuthUsers authUsers){
+                                                         @UserSession AuthUsers authUsers){
         return ResponseEntity.ok(usersService.updatePassword(request, authUsers));
     }
     @PutMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -65,16 +65,16 @@ public class UsersController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto<?>> delete(@RequestBody DeleteRequestDto request,
-                                                 @Parameter(hidden = true) @UserSession AuthUsers authUsers){
+                                                 @UserSession AuthUsers authUsers){
         return ResponseEntity.ok(usersService.delete(request, authUsers));
     }
 
     @GetMapping("/my")
-    public ResponseEntity<ResponseDto<?>> getMyPage(@Parameter(hidden = true) @UserSession AuthUsers authUsers){
+    public ResponseEntity<ResponseDto<?>> getMyPage(@UserSession AuthUsers authUsers){
         return ResponseEntity.ok(usersService.getMyPage(authUsers));
     }
     @GetMapping("/{userId}")
-    public ResponseEntity<ResponseDto<?>> getUserPage(@Parameter(hidden = true) @UserSession AuthUsers authUsers, @PathVariable String userId){
-        return ResponseEntity.ok(usersService.getUsersPage(authUsers, userId));
+    public ResponseEntity<ResponseDto<?>> getUserPage(@PathVariable String userId){
+        return ResponseEntity.ok(usersService.getUsersPage(userId));
     }
 }
