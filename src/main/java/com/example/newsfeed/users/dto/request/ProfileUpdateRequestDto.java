@@ -1,5 +1,6 @@
 package com.example.newsfeed.users.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
@@ -15,9 +16,10 @@ public class ProfileUpdateRequestDto {
     @Schema(description = "전화번호", example = "010-1234-5678")
     private String phone;
 
+    @JsonProperty
     @Schema(description = "성별", example = "1")
     private Byte gender;
 
-    @Schema(description = "비밀번호 확인", example = "password@A")
+    @Schema(description = "비밀번호 확인", example = "password@A1")
     private String password;
 }

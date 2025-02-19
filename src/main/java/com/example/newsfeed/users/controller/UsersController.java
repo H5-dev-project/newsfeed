@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class UsersController {
     private final UsersService usersService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto<?>> register(@Valid @RequestBody RegisterRequestDto request){
@@ -51,18 +52,17 @@ public class UsersController {
     }
     @PutMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<?>> updateProfile(
-            @RequestPart("profile") @Valid String profileUpdateJson,
+            @Valid @RequestPart("profile") @io.swagger.v3.oas.annotations.media.Schema(type = "string" , example = "{\"username\" : \"kkk\" , \"birth\" : \"2020-02-20\" , \"phone\" : \"010-9876-5432\" , \"gender\" : 1 , \"password\" : \"password@A1\"}")
+            String profileUpdateJson,
             @RequestPart(value = "file", required = false) MultipartFile file,
-            @UserSession AuthUsers authUsers){
-        // JSON을 객체로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        ProfileUpdateRequestDto dto;
+            @Parameter(hidden = true) @UserSession AuthUsers authUsers){
         try {
-            dto = objectMapper.readValue(profileUpdateJson, ProfileUpdateRequestDto.class);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("JSON 파싱 중 오류 발생: " + e.getMessage());
+            // JSON을 BoardSaveRequestDto로 변환
+            ProfileUpdateRequestDto dto = objectMapper.readValue(profileUpdateJson, ProfileUpdateRequestDto.class);
+            return ResponseEntity.ok(usersService.updateProfile(dto, file, authUsers));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(usersService.updateProfile(dto, file, authUsers));
     }
 
     @DeleteMapping("/delete")

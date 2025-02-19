@@ -25,8 +25,6 @@ public class MyPageResponseDto {
     private final LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy.MM.dd HH:mm")
     private final LocalDateTime modifiedAt;
-/*
-    private final List<> 게시글 사진 리스트를 받아야함., 게시물 개수, 친구수,
-*/
+
 
 }

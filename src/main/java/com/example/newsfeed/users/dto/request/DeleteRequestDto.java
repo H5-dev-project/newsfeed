@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class DeleteRequestDto {
-    @Schema(description = "비밀번호 확인", example = "password@A")
+    @Schema(description = "비밀번호 확인", example = "password@A1")
     private String password;
 }
