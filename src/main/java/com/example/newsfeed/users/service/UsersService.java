@@ -1,7 +1,10 @@
 package com.example.newsfeed.users.service;
 
+import com.example.newsfeed.board.entity.Board;
+import com.example.newsfeed.board.repository.BoardRepository;
 import com.example.newsfeed.common.dto.ResponseDto;
 import com.example.newsfeed.common.FileUtil;
+import com.example.newsfeed.friend.repository.FriendRepository;
 import com.example.newsfeed.jwt.JwtUtil;
 import com.example.newsfeed.jwt.dto.TokenDto;
 import com.example.newsfeed.jwt.entity.AuthUsers;
@@ -9,6 +12,7 @@ import com.example.newsfeed.jwt.entity.RefreshToken;
 import com.example.newsfeed.jwt.repository.RefreshTokenRepository;
 import com.example.newsfeed.users.dto.request.*;
 import com.example.newsfeed.users.dto.response.MyPageResponseDto;
+import com.example.newsfeed.users.dto.response.UsersPageBoardsResponseDto;
 import com.example.newsfeed.users.dto.response.UsersPageResponseDto;
 import com.example.newsfeed.users.dto.response.UsersResponseDto;
 import com.example.newsfeed.users.entity.Users;
@@ -22,13 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
-    /*    private final BoardRepository boardRepository;*/
+    private final BoardRepository boardRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final FriendRepository friendRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final FileUtil fileUtil; // 파일 저장 유틸리티
@@ -154,6 +160,13 @@ public class UsersService {
     public ResponseDto<MyPageResponseDto> getMyPage(AuthUsers authUsers) {
         Users users = usersRepository.findById(authUsers.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        List<Board> boards = boardRepository.findByUser_Id(users.getId());
+        int boardCount = boards.size();
+        List<UsersPageBoardsResponseDto> boardDtos = boards.stream()
+                .map(board -> new UsersPageBoardsResponseDto(board.getId(), board.getImages()))
+                .toList();
+
+        int friendCount = friendRepository.countByUsers_Id(users.getId());
 
         MyPageResponseDto response = new MyPageResponseDto(
                 users.getEmail(),
@@ -162,20 +175,35 @@ public class UsersService {
                 users.getPhone(),
                 users.getGender(),
                 users.getImagePath(),
+                boardCount,
+                friendCount,
+                boardDtos,
                 users.getCreatedAt(),
                 users.getModifiedAt()
         );
         return ResponseDto.success(response);
     }
-    public ResponseDto<UsersPageResponseDto> getUsersPage(String userId) {
+    public ResponseDto<UsersPageResponseDto> getUsersPage(AuthUsers authUsers, String userId) {
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        List<Board> boards = boardRepository.findByUser_Id(users.getId());
+        boolean isFriend = isFriend(authUsers.getUserId(), userId);
+        int friendCount = friendRepository.countByUsers_Id(users.getId());
+
+        List<UsersPageBoardsResponseDto> boardDtos = boards.stream()
+                .filter(board -> board.getVisibilityType() == 0 || (board.getVisibilityType() == 1 && isFriend))
+                .map(board -> new UsersPageBoardsResponseDto(board.getId(), board.getImages()))
+                .toList();
 
         UsersPageResponseDto response = new UsersPageResponseDto(
                 users.getUsername(),
                 users.getBirth(),
                 users.getGender(),
-                users.getImagePath()
+                users.getImagePath(),
+                boards.size(),
+                friendCount,
+                isFriend,
+                boardDtos
         );
         return ResponseDto.success(response);
     }
@@ -193,4 +221,8 @@ public class UsersService {
         return response;
     }
 
+    public boolean isFriend(String usersId, String friendId) {
+        return friendRepository.existsByUsers_IdAndFriend_Id(usersId, friendId)
+                || friendRepository.existsByFriend_IdAndUsers_Id(usersId, friendId);
+    }
 }
