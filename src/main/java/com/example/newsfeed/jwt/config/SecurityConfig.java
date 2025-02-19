@@ -42,11 +42,18 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthEntryPoint)  // EntryPoint 등록
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/swagger",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/api-docs",
+                                "/api-docs/**",
+                                "/v3/api-docs/**")
+                        .permitAll()
                         .requestMatchers(
                                 "/api/users/register",
                                 "/api/users/login",
                                 "/api/auth/refresh"
-                                )
+                        )
                         .permitAll()
                         .anyRequest().authenticated()
                 )
