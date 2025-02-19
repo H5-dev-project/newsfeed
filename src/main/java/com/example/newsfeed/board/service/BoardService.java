@@ -7,6 +7,7 @@ import com.example.newsfeed.board.entity.Board;
 import com.example.newsfeed.board.repository.BoardRepository;
 import com.example.newsfeed.common.FileUtil;
 import com.example.newsfeed.common.dto.ResponseDto;
+import com.example.newsfeed.friend.repository.FriendRepository;
 import com.example.newsfeed.jwt.entity.AuthUsers;
 import com.example.newsfeed.users.entity.Users;
 import com.example.newsfeed.users.repository.UsersRepository;
@@ -27,6 +28,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UsersRepository usersRepository;
     private final FileUtil fileUtil;
+    private final FriendRepository friendRepository;
 
     @Transactional
     public ResponseDto<BoardResponseDto> save(
@@ -62,19 +64,22 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseDto<List<BoardResponseDto>> findAll(BoardSaveRequestDto dto) {
+    public ResponseDto<List<BoardResponseDto>> findAll(AuthUsers authUsers) {
 
-        List<BoardResponseDto> dtoList = new ArrayList<>();
+        List<Board> boards = boardRepository.findAll();
 
-        //friendship 코드 들어오면 작성하기!
-//        switch (dto.getVisibilityType()) {
-//            case 0 : dtoList = boardRepository.findAll()
-//                        .stream().map(BoardResponseDto::toDto).toList();
-//                break;
-//            case 1 : dtoList = boardRepository.findById()
-//        }
+        List<BoardResponseDto> boardDtos = boards.stream()
+                .filter(board -> {
+                    String boardWriterId = board.getUser().getId();
+                    boolean isFriendWithWriter = isFriend(authUsers.getUserId(), boardWriterId);
 
-        return ResponseDto.success(dtoList);
+                    return board.getVisibilityType() == 0 || // 전체 공개
+                            (board.getVisibilityType() == 1 && isFriendWithWriter);
+
+                })
+                .map(BoardResponseDto::toDto)
+                .toList();
+        return ResponseDto.success(boardDtos);
     }
 
     @Transactional
@@ -108,5 +113,10 @@ public class BoardService {
         }
         fileUtil.deleteBoardImage(authUsers.getUserId(), board.getId());
         boardRepository.delete(board);
+    }
+
+    public boolean isFriend(String usersId, String friendId) {
+        return friendRepository.existsByUsers_IdAndFriend_Id(usersId, friendId)
+                || friendRepository.existsByFriend_IdAndUsers_Id(usersId, friendId);
     }
 }
