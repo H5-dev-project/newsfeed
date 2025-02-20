@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class StoryResponseDto {
@@ -13,10 +14,10 @@ public class StoryResponseDto {
     private final Long id;
     private final String content;
     private final int visibilityType;
-    private final LocalDate visibilityStart;
-    private final LocalDate visibilityEnd;
+    private final LocalDateTime visibilityStart;
+    private final LocalDateTime visibilityEnd;
 
-    public StoryResponseDto(Long id, String content, int visibilityType, LocalDate visibilityStart, LocalDate visibilityEnd) {
+    public StoryResponseDto(Long id, String content, int visibilityType, LocalDateTime visibilityStart, LocalDateTime visibilityEnd) {
         this.id = id;
         this.content = content;
         this.visibilityType = visibilityType;
