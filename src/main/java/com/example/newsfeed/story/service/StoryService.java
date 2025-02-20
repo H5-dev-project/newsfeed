@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class StoryService {
     @Transactional
     @Scheduled(cron = "0 * * * * ?")
     public void isVisibilityExpire(){
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         List<Story> expiredStories = storyRepository.findByVisibilityEndBeforeAndVisibilityType(now, 1);
 
         for(Story story : expiredStories){

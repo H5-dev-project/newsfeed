@@ -30,9 +30,9 @@ public class Story extends BaseEntity {
     private int visibilityType = 1;
 
     @CreatedDate
-    private LocalDate visibilityStart;
+    private LocalDateTime visibilityStart;
 
-    private LocalDate visibilityEnd;
+    private LocalDateTime visibilityEnd;
 
     public Story(){
 
@@ -55,7 +55,7 @@ public class Story extends BaseEntity {
     @PrePersist
     public void prePersist(){
         if(visibilityStart == null){
-            visibilityStart = LocalDate.now();
+            visibilityStart = LocalDateTime.now();
         }
 
         visibilityEnd = visibilityStart.plusDays(1);
